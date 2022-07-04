@@ -1,6 +1,19 @@
+const yargs = require('yargs/yargs');
 const fs = require('fs');
 const fsPromises = fs.promises;
-const logFolder = 'Z:/Projekty/logs/m002/2022_mar';
+
+const argv = yargs(process.argv.slice(2)).options({
+  a: { 
+  type: 'string', 
+  default: "lte",
+  describe: 'Szukany string'},
+  l: { 
+  type: 'string',
+  demand: true,
+  alias: 'file',
+  describe: 'Ścieżka do logów'},
+}).argv;
+
 
 
 async function ListDir(path: string) {
@@ -12,9 +25,9 @@ async function ListDir(path: string) {
   }
 }
 
-async function OpenLog(LogPath:string) {
+async function OpenLog(LogPath: string, Phrase: string) {
   
-  const regEx = new RegExp("lte", "i");
+  const regEx = new RegExp(Phrase, "i");
   const result: string[] = [];
   
   try {
@@ -50,10 +63,14 @@ async function OpenLog(LogPath:string) {
 
 
 
-async function ReadLogs(){
-  const logs_object = await ListDir(logFolder);        //Lista ze wszystkimi logami
+async function ReadLogs(Path: string, Phrase: string){
+  const logs_object = await ListDir(Path);        //Lista ze wszystkimi logami/ Zmiana zamiast "Log Folder"
+  
   const logs_array = Object.values(logs_object); 
-  const Result = await logs_array.forEach((keys) => {OpenLog(`${logFolder}/${keys}`)});
+  
+  
+  
+  const Result = await logs_array.forEach((keys) => {OpenLog(`${Path}/${keys}`, Phrase)});
 
 
   // const LogPath = `${logFolder}/${logs_array[0]}`;    //Pierwszy log - Path
@@ -70,5 +87,5 @@ async function ReadLogs(){
 }
 
 
-ReadLogs();
+ReadLogs(argv.l, argv.a);
 
