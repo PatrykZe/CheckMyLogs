@@ -37,11 +37,11 @@ async function OpenLog(LogPath: string, Phrase: string) {
       let lines:string[] = contents.toString().split("\n");
             lines.forEach(line => {
                 if (line && line.search(regEx) >= 0) {
-                    console.log('found in file ', line)
+                    // console.log('found in file ', line)   SRV
                     result.push(line)
                 }
             })
-            console.log('finished search');
+            // console.log('finished search'); SRV
             return result;
   
   })} 
@@ -53,10 +53,10 @@ async function OpenLog(LogPath: string, Phrase: string) {
 
 // async function ChoseLog(logs:object) {
   
-//   for (const log in logs) {
-//     const LogData = await OpenLog();
-//     console.log(LogData);
-//   }
+//   logs.sort(function(a, b) {
+//     return a.age - b.age;
+//   }); 
+
 // }
 
 
@@ -65,12 +65,21 @@ async function OpenLog(LogPath: string, Phrase: string) {
 
 async function ReadLogs(Path: string, Phrase: string){
   const logs_object = await ListDir(Path);        //Lista ze wszystkimi logami/ Zmiana zamiast "Log Folder"
-  
   const logs_array = Object.values(logs_object); 
   
+  let sortable = [];
+for (var string in logs_array) {
+    sortable.push(string,logs_array[string]);
+}
+
+const keysSorted = Object.keys(logs_array).sort(function(a){return list[b]})
+console.log(keysSorted); 
+
+console.log(sortable, typeof(sortable));
+ 
   
-  
-  const Result = await logs_array.forEach((keys) => {OpenLog(`${Path}/${keys}`, Phrase)});
+  const Result = logs_array.forEach((keys) => {OpenLog(`${Path}/${keys}`, Phrase)});
+
 
 
   // const LogPath = `${logFolder}/${logs_array[0]}`;    //Pierwszy log - Path
@@ -88,4 +97,3 @@ async function ReadLogs(Path: string, Phrase: string){
 
 
 ReadLogs(argv.l, argv.a);
-
